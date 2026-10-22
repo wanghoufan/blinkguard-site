@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>眨眼守护 BlinkGuard｜本地眨眼识别与用眼提醒</title>
+<meta name="description" content="把闲置的安卓手机架在显示器旁，用前置摄像头在手机本地识别完整眨眼；盯屏太久没眨眼就响一声、说一句「眨眨眼」。画面不上传、不保存、不联网。">
+<meta name="theme-color" content="#2A6FA8">
+<style>
+  :root{
+    --bg:#f4f7fa; --surface:#ffffff; --ink:#101418; --muted:#56646f;
+    --brand:#2A6FA8; --brand-deep:#1d5480; --brand-soft:#dbeaf6; --teal:#4F9E9A;
+    --line:#e2e9f0; --radius:20px;
+    --shadow:0 1px 2px rgba(16,26,36,.04),0 12px 32px rgba(16,26,36,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:var(--bg);color:var(--ink);font-size:19px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.nav{position:sticky;top:0;z-index:20;background:rgba(244,247,250,.84);backdrop-filter:saturate(160%) blur(12px);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;justify-content:space-between;height:68px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.2px;font-size:19px}
+  .dot{width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,var(--brand),var(--teal))}
+  .nav-cta{font-size:16px;color:#fff;background:var(--brand);padding:10px 18px;border-radius:999px;text-decoration:none;font-weight:600}
+  .hero{padding:72px 0 40px;display:grid;grid-template-columns:1.2fr .8fr;gap:44px;align-items:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:15px;color:var(--brand-deep);background:var(--brand-soft);padding:7px 13px;border-radius:999px;font-weight:600}
+  h1{font-size:clamp(31px,4.2vw,44px);line-height:1.18;margin:18px 0 14px;letter-spacing:-.5px}
+  .lead{font-size:19px;color:var(--muted);max-width:36ch}
+  .hero-actions{display:flex;gap:14px;align-items:center;margin-top:26px;flex-wrap:wrap}
+  .btn-primary{background:var(--brand);color:#fff;text-decoration:none;font-weight:600;font-size:17px;padding:14px 24px;border-radius:14px;box-shadow:var(--shadow)}
+  .meta{font-size:15px;color:var(--muted)}
+  .qr-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px;box-shadow:var(--shadow);text-align:center}
+  .qr-box{width:190px;height:190px;margin:6px auto 14px;border:2px dashed var(--brand-soft);border-radius:16px;display:flex;align-items:center;justify-content:center;background:#fbfdfe}
+  .qr-box img{width:100%;height:100%;object-fit:contain;border-radius:12px}
+  .qr-hint{font-size:15px;color:var(--muted)}
+  section{padding:56px 0}
+  h2{font-size:clamp(24px,3.4vw,32px);letter-spacing:-.3px;margin-bottom:8px}
+  .sub{color:var(--muted);margin-bottom:32px;max-width:62ch;font-size:17px}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:var(--shadow)}
+  .card .ic{width:40px;height:40px;border-radius:12px;background:var(--brand-soft);display:flex;align-items:center;justify-content:center;margin-bottom:14px}
+  .card .ic svg{width:22px;height:22px;stroke:var(--brand);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .card h3{font-size:19px;margin-bottom:6px}
+  .card p{font-size:16px;color:var(--muted)}
+  .shots{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .phone{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:14px;box-shadow:var(--shadow);margin:0}
+  .phone img{width:100%;height:auto;border-radius:16px;display:block}
+  .phone figcaption{text-align:center;font-size:15px;color:var(--muted);margin-top:10px}
+  .privacy{background:linear-gradient(135deg,var(--brand),var(--brand-deep));color:#eaf4fb;border-radius:var(--radius);padding:34px}
+  .privacy h2{color:#fff}
+  .privacy ul{list-style:none;display:grid;grid-template-columns:repeat(2,1fr);gap:12px 28px;margin-top:18px}
+  .privacy li{display:flex;gap:10px;font-size:16px;align-items:flex-start}
+  .privacy li b{color:#fff}
+  .privacy .chk{color:#a7e3df;font-weight:800;line-height:1.5}
+  footer{padding:40px 0 60px;color:var(--muted);font-size:15px;border-top:1px solid var(--line);margin-top:20px}
+  @media(max-width:820px){.hero{grid-template-columns:1fr;gap:32px}.grid,.shots{grid-template-columns:1fr}.privacy ul{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="nav"><div class="wrap nav-in">
+  <div class="logo"><span class="dot"></span> 眨眼守护 <span style="font-weight:400;color:var(--muted)">BlinkGuard</span></div>
+  <a class="nav-cta" href="#download">下载</a>
+</div></header>
+
+<div class="wrap">
+  <section class="hero">
+    <div>
+      <span class="eyebrow">● 本地识别 · 不上传画面</span>
+      <h1>把闲置手机架在显示器旁，<br>替你盯着眨眼</h1>
+      <p class="lead">用前置摄像头在手机本地识别你的完整眨眼。盯屏太久没眨眼，就响一声、说一句「眨眨眼」，并把每天的用眼趋势记下来。不是医疗器械，不产出健康评分。</p>
+      <div class="hero-actions">
+        <a class="btn-primary" href="#download">获取安卓版</a>
+        <span class="meta">Android · 无需登录 · 画面不出手机</span>
+      </div>
+    </div>
+    <div class="qr-card" id="download">
+      <div class="qr-box"><img src="./img/pgyer-qr.png" alt="蒲公英下载二维码" width="190" height="190"></div>
+      <div class="qr-hint">手机相机对准二维码即可下载安装 · <a href="https://www.pgyer.com/zhayanshouhu" style="color:var(--brand)">pgyer.com/zhayanshouhu</a></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>它能做什么</h2>
+    <p class="sub">从数眨眼到提醒，再到每天的用眼统计，一条完整闭环，全部在手机本地完成。</p>
+    <div class="grid">
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></div><h3>只数完整眨眼</h3><p>只有「闭眼—睁开」才算一次，短暂跳变不计数；一只眼识别不到时，用另一只眼兜底。</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>两类提醒</h3><p>超过阈值没眨眼就提醒（默认 10 秒，可选 5/10/15/20 秒）；最近 60 秒眨眼少于 8 次时再给一次低频提醒。</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9a4 4 0 0 1 0 6"/></svg></div><h3>听得见的提醒</h3><p>提示音、中文语音「眨眨眼」、静音文字通知三种方式可选，也能组合；提醒之间有冷却，不会连续轰炸。</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></div><h3>用眼趋势</h3><p>今天按 24 小时、近 7 天与近 30 天按日看：未眨眼提醒与低频提醒叠在同一根柱子上，另有 KPI 卡、一句话洞察与占比环。</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3"/></svg></div><h3>护眼小技巧</h3><p>4 条带来源标签的护眼技巧，配「今天已尝试 x/4」进度与 20 秒远眺计时练习。</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 8h18v10H3z"/><path d="M7 8V5h10v3M7 13h4"/></svg></div><h3>戴眼镜也认得</h3><p>分析画面最高 1280×960，支持 1.0/1.2/1.5× 变焦；30–40° 侧看时按较闭合的那只眼判断。</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>界面预览</h2>
+    <p class="sub">真机截图。</p>
+    <div class="shots">
+      <figure class="phone"><img src="./img/monitor.png" alt="监测页" width="1080" height="2460" loading="lazy"><figcaption>监测 · 实时眨眼计数与今日建议</figcaption></figure>
+      <figure class="phone"><img src="./img/stats.png" alt="用眼统计页" width="1080" height="2460" loading="lazy"><figcaption>统计 · 提醒分布、KPI 与占比环</figcaption></figure>
+      <figure class="phone"><img src="./img/settings.png" alt="设置页" width="1080" height="2460" loading="lazy"><figcaption>设置 · 提醒方式、阈值与识别诊断</figcaption></figure>
+    </div>
+  </section>
+
+  <section>
+    <div class="privacy">
+      <h2>隐私，是它的设计前提</h2>
+      <ul>
+        <li><span class="chk">✓</span> <b>画面只在手机本地处理</b>，不保存、不上传</li>
+        <li><span class="chk">✓</span> <b>不申请联网权限</b>，系统权限只有相机与通知两项</li>
+        <li><span class="chk">✓</span> <b>不建账号</b>，统计只保存聚合数字</li>
+        <li><span class="chk">✓</span> <b>不是医疗器械</b>，不诊断、不打分</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<footer><div class="wrap">眨眼守护 BlinkGuard · 个人学习项目 · 本地眨眼识别与用眼提醒</div></footer>
+</body>
+</html>
