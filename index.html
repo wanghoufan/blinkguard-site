@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>眨眼守护 BlinkGuard｜本地眨眼识别与用眼提醒</title>
-<meta name="description" content="把闲置的安卓手机架在显示器旁，用前置摄像头在手机本地识别完整眨眼；盯屏太久没眨眼就响一声、说一句「眨眨眼」。画面不上传、不保存、不联网。">
+<meta name="description" content="把闲置的安卓手机架在显示器旁，用前置摄像头在手机本地识别完整眨眼；盯屏太久没眨眼就响一声、说一句「眨眨眼」，还能记下每天真实的用眼时长。画面不上传、不保存、不联网。">
 <meta name="theme-color" content="#2A6FA8">
 <style>
   :root{
@@ -68,10 +68,10 @@
     <div>
       <span class="eyebrow">● 本地识别 · 不上传画面</span>
       <h1>把闲置手机架在显示器旁，<br>替你盯着眨眼</h1>
-      <p class="lead">用前置摄像头在手机本地识别你的完整眨眼。盯屏太久没眨眼，就响一声、说一句「眨眨眼」，并把每天的用眼趋势记下来。不是医疗器械，不产出健康评分。</p>
+      <p class="lead">用前置摄像头在手机本地识别你的完整眨眼。盯屏太久没眨眼，就响一声、说一句「眨眨眼」；同时记下你每天真实的用眼时长，看久了该歇时提醒你。不是医疗器械，不产出健康评分。</p>
       <div class="hero-actions">
         <a class="btn-primary" href="#download">获取安卓版</a>
-        <span class="meta">Android · 无需登录 · 画面不出手机</span>
+        <span class="meta">Android · 无需登录 · 画面不出手机 · 版本 1.1.0</span>
       </div>
     </div>
     <div class="qr-card" id="download">
@@ -82,12 +82,12 @@
 
   <section>
     <h2>它能做什么</h2>
-    <p class="sub">从数眨眼到提醒，再到每天的用眼统计，一条完整闭环，全部在手机本地完成。</p>
+    <p class="sub">从数眨眼到分级提醒，再到每天的用眼时长与用眼趋势，一条完整闭环，全部在手机本地完成。</p>
     <div class="grid">
       <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6z"/><circle cx="12" cy="12" r="3"/></svg></div><h3>只数完整眨眼</h3><p>只有「闭眼—睁开」才算一次，短暂跳变不计数；一只眼识别不到时，用另一只眼兜底。</p></div>
-      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>两类提醒</h3><p>超过阈值没眨眼就提醒（默认 10 秒，可选 5/10/15/20 秒）；最近 60 秒眨眼少于 8 次时再给一次低频提醒。</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><h3>三类提醒</h3><p>超过阈值没眨眼就提醒（默认 10 秒，可选 5/10/15/20 秒）；最近 60 秒眨眼少于 8 次时再给一次低频提醒；用眼每满 1 小时给一次安静的整点提醒。三者各有不同的颜色、声音与语气。</p></div>
       <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 9a4 4 0 0 1 0 6"/></svg></div><h3>听得见的提醒</h3><p>提示音、中文语音「眨眨眼」、静音文字通知三种方式可选，也能组合；提醒之间有冷却，不会连续轰炸。</p></div>
-      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></div><h3>用眼趋势</h3><p>今天按 24 小时、近 7 天与近 30 天按日看：未眨眼提醒与低频提醒叠在同一根柱子上，另有 KPI 卡、一句话洞察与占比环。</p></div>
+      <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M5 20V10M12 20V4M19 20v-7"/></svg></div><h3>用眼趋势与用眼时长</h3><p>提醒分布按今天 24 小时、近 7 天与近 30 天看，未眨眼与低频提醒叠在同一根柱子上，另有 KPI 卡与占比环；用眼时长单独一张图，只统计镜头里有一张朝屏幕的脸的时间，离开画面自动停表。</p></div>
       <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3"/></svg></div><h3>护眼小技巧</h3><p>4 条带来源标签的护眼技巧，配「今天已尝试 x/4」进度与 20 秒远眺计时练习。</p></div>
       <div class="card"><div class="ic"><svg viewBox="0 0 24 24"><path d="M3 8h18v10H3z"/><path d="M7 8V5h10v3M7 13h4"/></svg></div><h3>戴眼镜也认得</h3><p>分析画面最高 1280×960，支持 1.0/1.2/1.5× 变焦；30–40° 侧看时按较闭合的那只眼判断。</p></div>
     </div>
@@ -97,9 +97,9 @@
     <h2>界面预览</h2>
     <p class="sub">真机截图。</p>
     <div class="shots">
-      <figure class="phone"><img src="./img/monitor.png" alt="监测页" width="1080" height="2460" loading="lazy"><figcaption>监测 · 实时眨眼计数与今日建议</figcaption></figure>
-      <figure class="phone"><img src="./img/stats.png" alt="用眼统计页" width="1080" height="2460" loading="lazy"><figcaption>统计 · 提醒分布、KPI 与占比环</figcaption></figure>
-      <figure class="phone"><img src="./img/settings.png" alt="设置页" width="1080" height="2460" loading="lazy"><figcaption>设置 · 提醒方式、阈值与识别诊断</figcaption></figure>
+      <figure class="phone"><img src="./img/monitor.png" alt="监测页" width="1080" height="2460" loading="lazy"><figcaption>监测 · 今日用眼时长、实时眨眼计数与今日建议</figcaption></figure>
+      <figure class="phone"><img src="./img/stats.png" alt="用眼统计页" width="1080" height="2460" loading="lazy"><figcaption>统计 · 提醒分布、用眼时长独立柱图与 KPI</figcaption></figure>
+      <figure class="phone"><img src="./img/settings.png" alt="设置页" width="1080" height="2460" loading="lazy"><figcaption>设置 · 报警声、每小时用眼提醒与识别诊断</figcaption></figure>
     </div>
   </section>
 
